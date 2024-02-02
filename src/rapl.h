@@ -4,7 +4,7 @@
  * 
  * Authors: @bensong04
  * 
-**/
+*/
 
 #pragma once
 
