@@ -12,7 +12,7 @@ To run the Firefly profiler and generate the associated JSON:
 mkdir build
 cmake ..
 make
-./leaf
+./leaf program
 ```
 
 To run the GUI on a generated profile (JSON): 
