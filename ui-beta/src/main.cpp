@@ -4,6 +4,7 @@
 #include <vector>      // for vector
 #include <fstream>
 #include <sstream>
+#include <format>
 
 #include "ftxui/component/captured_mouse.hpp"  // for ftxui
 #include "ftxui/component/component.hpp"  // for Renderer, ResizableSplitBottom, ResizableSplitLeft, ResizableSplitRight, ResizableSplitTop
@@ -12,7 +13,11 @@
 #include "ftxui/dom/elements.hpp"  // for Element, operator|, text, center, border
 
 #include "json.h"
- 
+
+#define A_MILLION 1000000
+#define JOULE_TO_CO2 0.0000001158426d
+#define JOULE_TO_TREE_COST 0.000000002316852d
+#define JOULE_TO_EIFFEL_DAYS 0.000000000015d
 
 using namespace ftxui;
 
@@ -110,6 +115,11 @@ int main() {
   file.close();
 
   json::jobject result = json::jobject::parse(fileContent);
+  uint64_t total_mj_usage = (long) result["energy"];
+  double total_j_usage = total_mj_usage / 1000;
+  double kgCO2 = total_j_usage * JOULE_TO_CO2;
+  double dollarTrees = total_j_usage * JOULE_TO_TREE_COST;
+  double eiffelDays = total_j_usage * JOULE_TO_EIFFEL_DAYS;
 
   auto screen = ScreenInteractive::Fullscreen();
 
@@ -168,7 +178,7 @@ int main() {
       cell->Add(Text(children[i]["ident"]) | bold | underlined);
         
       
-      auto ss = std::stringstream{children[i]["disas"]};
+      auto ss = std::stringstream{(std::string) children[i]["disas"]};
 
       for (std::string line; std::getline(ss, line, '\n');)
         cell->Add(Paragraph(line) | frame);
@@ -183,7 +193,7 @@ int main() {
       auto cell = Container::Vertical({});
       cell->Add(Text(children[i]["ident"]) | bold | underlined);
       
-      auto ss = std::stringstream{children[i]["disas"]};
+      auto ss = std::stringstream{(std::string) children[i]["disas"]};
 
       for (std::string line; std::getline(ss, line, '\n');)
         cell->Add(Paragraph(line) | frame);
@@ -244,12 +254,12 @@ int main() {
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
     Renderer([&desatfirecolor] { return text("             If your program run on 1 000 000 computers,             ") | color(desatfirecolor) | center; }),
-    Renderer([&firecolor]      { return text("             it would release 123456 kg of CO2.                      ") | color(firecolor) | bold | center; }),
-    Renderer([&firecolor]      { return text("             It could power the Eiffel tower for 100 days.           ") | color(firecolor) | bold | center; }),
-    Renderer([&firecolor]      { return text("             You would owe $69420 in carbon taxes.                   ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor, &kgCO2]      { return text(std::format("             it would release {} kg of CO2.                      ", kgCO2 * A_MILLION)) | color(firecolor) | bold | center; }),
+    Renderer([&firecolor, &eiffelDays]      { return text(std::format("             It could power the Eiffel tower for {} days.           ", eiffelDays * A_MILLION)) | color(firecolor) | bold | center; }),
+    Renderer([&firecolor, &dollarTrees]      { return text(std::format("             You would owe ${} in carbon taxes.                   ", dollarTrees * A_MILLION)) | color(firecolor) | bold | center; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
-    Renderer([&desatfirecolor] { return text("             Total joules used (per run): 10 J                       ") | color(desatfirecolor) | center ; }),
-    Renderer([&desatfirecolor] { return text("             Total kg CO2 released (per run): 0.1 kg                 ") | color(desatfirecolor) | center ; }),
+    Renderer([&desatfirecolor, &total_mj_usage] { return text(std::format("             Total joules used (per run): {} mJ                       ", (long) total_mj_usage)) | color(desatfirecolor) | center ; }),
+    Renderer([&desatfirecolor, &kgCO2] { return text(std::format("             Total kg CO2 released (per run): {} kg                 ", kgCO2)) | color(desatfirecolor) | center ; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; })
   });
