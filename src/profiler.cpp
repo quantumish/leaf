@@ -31,7 +31,7 @@ uint32_t freeze(pid_t pid) {
 void unfreeze(pid_t pid) {
     kill(pid, SIGSTOP);
     kill(pid, SIGCONT);
-    waitpid(pid, NULL, 0);
+    // waitpid(pid, NULL, 0);
     ptrace(PTRACE_DETACH, pid, NULL, NULL);
 }
 
