@@ -10,6 +10,7 @@
 
 #include "flametree.hpp"
 #include "profiler.hpp"
+#include "statistics.hpp"
 
 #include <iostream>
 #include <fstream>

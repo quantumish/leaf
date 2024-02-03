@@ -49,22 +49,19 @@ int disas(int pid, unsigned long addr)
 	// 	return -1;
 	// }    
 
-    int remaining = 8;
-    while (remaining > 0) {
-        ud_init(&ud_obj);
-        ud_set_input_buffer(&ud_obj, buff+(8-remaining), 64-(8*(8-remaining)));
-        ud_set_mode(&ud_obj, 64);
-        ud_set_syntax(&ud_obj, UD_SYN_ATT);
+    
+    ud_init(&ud_obj);
+    ud_set_input_buffer(&ud_obj, buff, 4);
+    ud_set_mode(&ud_obj, 64);
+    ud_set_syntax(&ud_obj, UD_SYN_ATT);
 
-        // ud_disassemble fills the ud_obj struct with data
-        if (ud_disassemble(&ud_obj) != 0) {
-            printf("%016lx %-20s %s\n", addr+(8-remaining),
-                   ud_insn_hex(&ud_obj), ud_insn_asm(&ud_obj));
-        } else {
-            printf("idk bro\n");
-        }
-        remaining -= (int)ud_insn_len(&ud_obj);
+    if (ud_disassemble(&ud_obj) != 0) {
+        printf("%016lx %-20s %s\n", addr,
+               ud_insn_hex(&ud_obj), ud_insn_asm(&ud_obj));
+    } else {
+        printf("idk bro\n");
     }
+    return (int)ud_insn_len(&ud_obj);
 }
 
 
@@ -85,7 +82,7 @@ std::vector<std::string> unwind(pid_t pid) {
         // printf("%p\n", (void*)ip);        
         // printf("%s: %p\n",fname, (char*)info.dli_fbase);       
         
-        // disas(pid, regs.rip);
+        // disas(pid, ip);
         // printf("RIP: %llx instruction %lx\n", regs.rip, ins);
         stack.emplace_back(fname);
     } while(unw_step(&c) > 0);
