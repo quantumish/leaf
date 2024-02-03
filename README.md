@@ -1,4 +1,4 @@
-<p align="center"><img style="float: right; width: 120px;" src="https://i.imgur.com/xz7unmY.png"></p>
+<p align="center"><img style="float: right; width: 80px;" src="https://i.imgur.com/xz7unmY.png"></p>
 
 # firefly
 
