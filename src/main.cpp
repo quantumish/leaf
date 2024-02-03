@@ -23,6 +23,9 @@ int main(int argc, char** argv) {
     // TODO do not make iteration based
     for (int i = 0; i < 10000; i++) {
         uint32_t energy = freeze(target);
+        #ifdef NVIDIA
+        std::cout << gpu_uJ_since_ever() << "\n";
+        #endif 
         std::vector<std::string> stack = unwind(target);
         // for (auto s : stack) {
         // }

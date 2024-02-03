@@ -17,3 +17,7 @@
 #endif
 
 uint32_t get_curr_mjoule_usage();
+
+#ifdef NVIDIA
+uint64_t gpu_uJ_since_ever();
+#endif
