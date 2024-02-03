@@ -1,6 +1,6 @@
 /**
  * 
- * Author: @bensong04
+ * @author: bensong04
  * 
 */
 
@@ -17,6 +17,7 @@
 leaffn_t* new_leaffn(leaffn_t* caller, std::string fn_ident) {
     leaffn_t* new_leaf = (leaffn_t*) malloc(sizeof(leaffn_t));
     if (new_leaf == NULL) return NULL; // allocating memory for the header failed
+    new_leaf->callees = std::unordered_map<std::string, leaffn_t*>{};
     new_leaf->total_energy_usage = 0;
     new_leaf->caller = caller;
     new_leaf->fn_ident = fn_ident;

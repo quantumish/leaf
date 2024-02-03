@@ -4,8 +4,6 @@
  * 
 */
 
-#include <stdio.h>
-
 void f1() {
     int res = 1;
     for (int i = 0; i < 1000; i++) {
