@@ -1,3 +1,4 @@
+#include <Zydis/Disassembler.h>
 #include <stdint.h>
 #include <sys/types.h>
 #include <sys/ptrace.h>
@@ -19,7 +20,10 @@
 #include "rapl.hpp"
 
 #include <dlfcn.h>
-#include <udis86.h>
+extern "C" {
+#include <Zydis/Zydis.h>
+#include <Zydis/Disassembler.h>
+}
 
 uint32_t freeze(pid_t pid, uint32_t& last_rapl) {
     ptrace(PTRACE_ATTACH, pid);
@@ -37,31 +41,27 @@ void unfreeze(pid_t pid) {
 
 int disas(int pid, unsigned long addr)
 {
-	ud_t ud_obj;
-	unsigned char *buff;
+    ZyanU64 runtime_address = addr;
+    ZyanUSize offset = 0;
+    ZydisDisassembledInstruction instruction;
+    long ins[4];
+    ins[0] = ptrace(PTRACE_PEEKTEXT, pid, addr, NULL);
+    ins[1] = ptrace(PTRACE_PEEKTEXT, pid, addr+8, NULL);
+    ins[2] = ptrace(PTRACE_PEEKTEXT, pid, addr+16, NULL);
+    ins[3] = ptrace(PTRACE_PEEKTEXT, pid, addr+16, NULL);
     
-    long ins = ptrace(PTRACE_PEEKTEXT, pid, addr, NULL);
-    buff = (unsigned char*)&ins;
-    // printf("%lx (%x %x %x %x)\n", ins, buff[0], buff[1], buff[2], buff[3]);
-    
-	// if (ptrace(pid, addr, buff) == -1) {
-	// 	printf("(Can't read)\n");
-	// 	return -1;
-	// }    
-
-    
-    ud_init(&ud_obj);
-    ud_set_input_buffer(&ud_obj, buff, 4);
-    ud_set_mode(&ud_obj, 64);
-    ud_set_syntax(&ud_obj, UD_SYN_ATT);
-
-    if (ud_disassemble(&ud_obj) != 0) {
-        printf("%016lx %-20s %s\n", addr,
-               ud_insn_hex(&ud_obj), ud_insn_asm(&ud_obj));
-    } else {
-        printf("idk bro\n");
+    ZyanU8* data = (ZyanU8*)&ins;
+     while (ZYAN_SUCCESS(ZydisDisassembleATT(
+        /* machine_mode:    */ ZYDIS_MACHINE_MODE_LONG_64,
+        /* runtime_address: */ runtime_address,
+        /* buffer:          */ data + offset,
+        /* length:          */ sizeof(data)*4 - offset,
+        /* instruction:     */ &instruction
+    ))) {
+        printf("%016" PRIX64 "  %s\n", runtime_address, instruction.text);
+        offset += instruction.info.length;
+        runtime_address += instruction.info.length;
     }
-    return (int)ud_insn_len(&ud_obj);
 }
 
 

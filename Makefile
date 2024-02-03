@@ -7,4 +7,4 @@ test_baseline_stats:
 	g++ src/rapl.cpp src/statistics.cpp tests/stats_tests/stest_baseline.cpp -I./src -o test_baseline_stats
 
 profile:
-	g++ -std=c++20 src/profiler.cpp src/main.cpp src/rapl.cpp src/leaffunction.cpp src/flametree.cpp src/json.cpp -lunwind -lunwind-generic -lunwind-ptrace -ludis86 -o leaf
+	g++ -std=c++20 src/profiler.cpp src/main.cpp src/rapl.cpp src/leaffunction.cpp src/flametree.cpp src/json.cpp -lunwind -lunwind-generic -lunwind-ptrace -lZydis -o leaf -I /usr/include/zydis/dependencies/zycore/include
