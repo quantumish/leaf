@@ -6,3 +6,9 @@
  * 
 */
 
+#include <utility>
+#include <vector>
+#include <numeric>
+#include <cmath>
+
+std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence);
