@@ -10,8 +10,9 @@
 #pragma once
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <stdint.h>
+#include <string>
 
 typedef struct leaffunction_header {
     uint64_t total_energy_usage;    
@@ -20,7 +21,7 @@ typedef struct leaffunction_header {
     std::string fn_ident;
 } leaffn_t;
 
-leaffn_t* new_leaffn(leaffn_t* caller, char* fn_ident);
+leaffn_t* new_leaffn(leaffn_t* caller, std::string fn_ident);
 
 uint64_t get_total_energy_usage(leaffn_t* fn_node);
 

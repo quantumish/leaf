@@ -10,7 +10,7 @@
 
 flametree_t* flametree_new() {
     flametree_t* res = (flametree_t*)malloc(sizeof(flametree_t));
-    res->root_leaffn = new_leaffn(NULL, "_start");
+    res->root_leaffn = new_leaffn(NULL, std::string("_start"));
     return res;
 }
 
