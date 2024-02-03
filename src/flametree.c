@@ -1,3 +1,9 @@
+/**
+ * 
+ * Author: @sim15
+ * 
+*/
+
 #include "flametree.h"
 #include <string.h>
 
