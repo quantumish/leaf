@@ -98,7 +98,7 @@ Component make_collapse(json::jobject energy_profile) {
 }
 
 int main() {
-  std::ifstream file("../src/test.json");
+  std::ifstream file("./test2.json");
 
   // Check if the file is opened successfully
   if (!file.is_open()) {
@@ -170,7 +170,8 @@ int main() {
     bottom_panel->Add(Separator());
     info_container->Add(Text("Hot Spots") | center);
     size_t counter = 0;
-    for (size_t i = 0; i < children.size() / 2; i++) {
+    // for (size_t i = 0; i < children.size() / 2; i++) {
+    int i = 0;
       auto row = Container::Horizontal({});
       auto cell = Container::Vertical({});
       auto cell1 = Container::Vertical({});
@@ -185,22 +186,24 @@ int main() {
       
       row->Add(cell  | frame | border | flex | size(WIDTH, EQUAL, 80));
       info_container1->Add(row);
-      counter++;
-    }
+      counter++;      
 
-    for (size_t i = counter+1; i < children.size(); i++) {
-      auto row = Container::Horizontal({});
-      auto cell = Container::Vertical({});
-      cell->Add(Text(children[i]["ident"]) | bold | underlined);
+      for (auto thing : children[i]["instrs"]) {
+        auto row = Container::Horizontal({});        
+        row->Add(Text(std::to_string(thing[key])) | bold);
+        row->Add(Text(std::to_string(val)));
+        info_container2->Add(row);
+      }
+
       
-      auto ss = std::stringstream{(std::string) children[i]["disas"]};
+      auto ss = std::stringstream{children[i]["disas"]};
 
       for (std::string line; std::getline(ss, line, '\n');)
         cell->Add(Paragraph(line) | frame);
       
-      row->Add(cell  | frame | border | flex | size(WIDTH, EQUAL, 80));
-      info_container2->Add(row);
-    }
+    //   row->Add(cell  | frame | border | flex | size(WIDTH, EQUAL, 80));
+    //   info_container2->Add(row);
+    // }
     
   info_container_wrapper->Add(info_container1 | flex | frame | vscroll_indicator);
   info_container_wrapper->Add(info_container2 | flex | frame | vscroll_indicator);
@@ -224,12 +227,12 @@ int main() {
   auto linet = Renderer([&color9] { return text("                              ") | color(color9) ; }); 
   auto line1 = Renderer([&color1] { return text("                  ====        ") | color(color1) ; });  
   auto line2 = Renderer([&color2] { return text("          -:::::%=%%%==       ") | color(color2) ; });  
-  auto line3 = Renderer([&color3] { return text("     %:::::-%++++++*==#%             _____.__                _____.__         ") | color(color3) ; });  
-  auto line4 = Renderer([&color4] { return text("     %:::%******%++%%=:            _/ ____\\__|______   _____/ ____\\  | ___.__.") | color(color4) ; });  
-  auto line5 = Renderer([&color5] { return text("       %*********%*+:::            \\   __\\|  \\_  __ \\_/ __ \\   __\\|  |<   |  |") | color(color5) ; });  
-  auto line6 = Renderer([&color6] { return text("       %*********%:::::             |  |  |  ||  | \\/\\  ___/|  |  |  |_\\___  |") | color(color6) ; });  
-  auto line7 = Renderer([&color7] { return text("      %********%::::::              |__|  |__||__|    \\___  >__|  |____/ ____|") | color(color7) ; });  
-  auto line8 = Renderer([&color8] { return text("      *%%%%%%%*  %%%                                      \\/           \\/     ") | color(color8) ; }); 
+  auto line3 = Renderer([&color3] { return text("     %:::::-%++++++*==#%           _____.__                _____.__         ") | color(color3) ; });  
+  auto line4 = Renderer([&color4] { return text("     %:::%******%++%%=:          _/ ____\\__|______   _____/ ____\\  | ___.__.") | color(color4) ; });  
+  auto line5 = Renderer([&color5] { return text("       %*********%*+:::          \\   __\\|  \\_  __ \\_/ __ \\   __\\|  |<   |  |") | color(color5) ; });  
+  auto line6 = Renderer([&color6] { return text("       %*********%:::::           |  |  |  ||  | \\/\\  ___/|  |  |  |_\\___  |") | color(color6) ; });  
+  auto line7 = Renderer([&color7] { return text("      %********%::::::            |__|  |__||__|    \\___  >__|  |____/ ____|") | color(color7) ; });  
+  auto line8 = Renderer([&color8] { return text("      *%%%%%%%*  %%%                                    \\/           \\/     ") | color(color8) ; }); 
   auto line9 = Renderer([&color9] { return text("       %%%*%                  ") | color(color9) ; });
   auto lineb = Renderer([&color9] { return text("                              ") | color(color9) ; });  
   
