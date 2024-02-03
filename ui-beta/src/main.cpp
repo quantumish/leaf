@@ -190,20 +190,42 @@ int main() {
   });
   
   auto bignumbers = Container::Vertical({
-    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
-    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
-    Renderer([&desatfirecolor] { return text("                  If your program run on 1 000 000 computers,                 ") | color(desatfirecolor) | center; }),
-    Renderer([&firecolor]      { return text("                  it would release 123456 kg of CO2.                          ") | color(firecolor) | bold | center; }),
-    Renderer([&firecolor]      { return text("                  It could power the Eiffel tower for 100 days.               ") | color(firecolor) | bold | center; }),
-    Renderer([&firecolor]      { return text("                  You would owe $69420 in carbon taxes.                       ") | color(firecolor) | bold | center; }),
-    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
-    Renderer([&desatfirecolor] { return text("                  Total joules used (per run): 10 J                           ") | color(desatfirecolor) | center ; }),
-    Renderer([&desatfirecolor] { return text("                  Total kg CO2 released (per run): 0.1 kg                     ") | color(desatfirecolor) | center ; }),
-    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
-    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; })
+    Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
+    Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
+    Renderer([&desatfirecolor] { return text("             If your program run on 1 000 000 computers,             ") | color(desatfirecolor) | center; }),
+    Renderer([&firecolor]      { return text("             it would release 123456 kg of CO2.                      ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor]      { return text("             It could power the Eiffel tower for 100 days.           ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor]      { return text("             You would owe $69420 in carbon taxes.                   ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
+    Renderer([&desatfirecolor] { return text("             Total joules used (per run): 10 J                       ") | color(desatfirecolor) | center ; }),
+    Renderer([&desatfirecolor] { return text("             Total kg CO2 released (per run): 0.1 kg                 ") | color(desatfirecolor) | center ; }),
+    Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
+    Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; })
   });
-  
-  auto top = Container::Horizontal({logo, bignumbers});
+
+  auto flame1 = Color::RGB(255, 255, 31);
+  auto flame2 = Color::RGB(249, 213, 0);
+  auto flame3 = Color::RGB(238, 173, 0);
+  auto flame4 = Color::RGB(222, 133, 0);
+  auto flame5 = Color::RGB(201, 95, 0);
+  auto flame6 = Color::RGB(176, 56, 0);
+  auto flame7 = Color::RGB(147, 1, 1);
+  auto flame8 = Color::RGB(127, 1, 1);
+
+  auto flames = Container::Vertical({
+    Renderer([&flame1]      { return text(" ") | color(flame1) | center ; }),
+    Renderer([&flame1]      { return text("              (  .      )                     ") | color(flame1) | center ; }),
+    Renderer([&flame2]      { return text("          )           (              )        ") | color(flame2) | center ; }),
+    Renderer([&flame3] { return text("                .  '   .   '  .  '  .         ") | color(flame3) | center; }),
+    Renderer([&flame4]      { return text("       (    , )       (.   )  (   ',    )     ") | color(flame4) | center; }),
+    Renderer([&flame5]      { return text("        .' ) ( . )    ,  ( ,     )   ( .      ") | color(flame5) | center; }),
+    Renderer([&flame6]      { return text("     ). , ( .   (  ) ( , ')  .' (  ,    )     ") | color(flame6) | center; }),
+    Renderer([&flame7]      { return text("    (_,) . ), ) _) _,')  (, ) '. )  ,. (' )   ") | color(flame7) | center ; }),
+    Renderer([&flame8] { return text("jgs^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ") | color(flame8) | center ; }),
+    Renderer([&flame8] { return text(" ") | color(flame8) | center ; })
+  });
+
+  auto top = Container::Horizontal({logo, bignumbers, flames});
 
   int left_size = 50;
   int right_size = 50;
