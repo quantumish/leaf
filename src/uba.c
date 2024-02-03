@@ -27,7 +27,7 @@ void uba_resize(uba_t* uba) {
 
 void uba_add(uba_t* uba, char *s) {
     if (uba->size == uba->capacity) uba_resize(uba);
-    strncpy(uba->data+(uba->size*uba->elt_size) , s, uba->elt_size);
+    memcpy(uba->data+(uba->size*uba->elt_size), s, uba->elt_size);
     uba->size++;
 }
 
