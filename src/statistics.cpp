@@ -68,3 +68,24 @@ std::pair<double, double> record_baseline_conf_interval(int iterations, double c
     double conf_width = inv_norm_cdf * stdev / std::sqrt(iterations);
     return std::pair<double, double>(mean_mj - conf_width, mean_mj + conf_width);
 }
+
+std::pair<double, double> conf_interval_from_samples(std::vector<uint32_t> samples, double confidence) {
+    size_t iterations = samples.size();
+    uint64_t mean_mj = 0;
+    for (size_t iteration = 0; iteration < iterations; iteration++) {
+        mean_mj += samples[iteration];
+    }
+    mean_mj /= samples.size();
+    double variance = 0;
+    for (size_t iteration_idx = 0; iteration_idx < iterations; iteration_idx++) {
+        variance += std::pow((mean_mj - samples[iteration_idx]), 2);
+    }
+    variance /= (iterations - 1);
+    double stdev = std::sqrt(variance);
+    // return degenerate interval in case confidence is invalid
+    if (confidence < 0 || confidence > 1) return std::pair<double, double>(0, 0); 
+    // calculate inverse normal CDF (z*)
+    double inv_norm_cdf = NormalCDFInverse(0.5 + confidence/2);
+    double conf_width = inv_norm_cdf * stdev / std::sqrt(iterations);
+    return std::pair<double, double>(mean_mj - conf_width, mean_mj + conf_width);
+}

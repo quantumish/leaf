@@ -13,4 +13,6 @@
 
 double NormalCDFInverse(double p);
 
-std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence);
+std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence, uint32_t& last_rapl);
+
+std::pair<double, double> conf_interval_from_samples(std::vector<uint32_t> samples, double confidence);
