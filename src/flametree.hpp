@@ -42,4 +42,4 @@ void flametree_update(flametree_t* root, std::vector<std::string> call_stack, ui
 
 void flametree_dump(leaffn_t* root, int depth);
 
-void flametree_dump_json(leaffn_t* root, std::ofstream outstream);
+void flametree_dump_json(flametree_t* root, std::ofstream& outstream);

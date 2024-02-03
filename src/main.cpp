@@ -1,3 +1,4 @@
+#include <fstream>
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -10,6 +11,7 @@
 #include "profiler.hpp"
 
 #include <iostream>
+#include <fstream>
 
 #define SLEEP_TIME 10
 
@@ -37,7 +39,11 @@ int main(int argc, char** argv) {
         flametree_update(ft, stack, energy);
         usleep(SLEEP_TIME);
     }
-    /* FILE* out = fopen("./test.json", "w"); */
+    flametree_dump(ft->root_leaffn, 0);
+    std::ofstream ofs;
+    ofs.open("./out.json", std::ofstream::out | std::ofstream::app);
+    flametree_dump_json(ft, ofs);
+    // FILE* out = fopen("./test.json", "w");
     // flametree_dump(ft->root_leaffn, 0);
     /* fclose(out); */
 }
