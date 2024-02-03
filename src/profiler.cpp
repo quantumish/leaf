@@ -75,14 +75,20 @@ std::vector<std::string> unwind(pid_t pid) {
         unw_word_t offset;
         char fname[MAX_SYMLEN] = {0};
         int resp = unw_get_proc_name(&c, fname, MAX_SYMLEN, &offset);
-        // unw_word_t ip;
-        // unw_get_reg(&c, UNW_REG_IP, &ip);
+        unw_proc_info_t pip;
+        unw_get_proc_info(&c, &pip);
+        printf("%s\n", fname);
+        disas(pid, pip.start_ip); 
+
+        
+        unw_word_t ip;
+        unw_get_reg(&c, UNW_REG_IP, &ip);
         // Dl_info info;
         // dladdr((void*)ip, &info);
-        // printf("%p\n", (void*)ip);        
+        // // printf("%p\n", (void*)ip);        
         // printf("%s: %p\n",fname, (char*)info.dli_fbase);       
-        
-        // disas(pid, ip);
+
+        disas(pid, ip); 
         // printf("RIP: %llx instruction %lx\n", regs.rip, ins);
         stack.emplace_back(fname);
     } while(unw_step(&c) > 0);
