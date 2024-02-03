@@ -253,16 +253,28 @@ int main() {
       lineb
   });
   
+  char wouldrelease[150];
+  char powereiffel[150];
+  char owemoney[150];
+  char totalmjline[150];
+  char totalkgco2[150];
+
+  snprintf(wouldrelease, 150, "             it would release %lf kg of CO2.                      ", kgCO2 * A_MILLION);
+  snprintf(powereiffel, 150, "             It could power the Eiffel tower for {} days.           ", eiffelDays * A_MILLION);
+  snprintf(owemoney, 150, "             You would owe ${} in carbon taxes.                   ", dollarTrees * A_MILLION);
+  snprintf(totalmjline, 150, "             Total joules used (per run): {} mJ                       ", (long) total_mj_usage);
+  snprintf(totalkgco2, 150, "             Total kg CO2 released (per run): {} kg                 ", kgCO2);
+
   auto bignumbers = Container::Vertical({
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
     Renderer([&desatfirecolor] { return text("             If your program run on 1 000 000 computers,             ") | color(desatfirecolor) | center; }),
-    Renderer([&firecolor, &kgCO2]      { return text(std::format("             it would release {} kg of CO2.                      ", kgCO2 * A_MILLION)) | color(firecolor) | bold | center; }),
-    Renderer([&firecolor, &eiffelDays]      { return text(std::format("             It could power the Eiffel tower for {} days.           ", eiffelDays * A_MILLION)) | color(firecolor) | bold | center; }),
-    Renderer([&firecolor, &dollarTrees]      { return text(std::format("             You would owe ${} in carbon taxes.                   ", dollarTrees * A_MILLION)) | color(firecolor) | bold | center; }),
+    Renderer([&firecolor, &wouldrelease]      { return text(wouldrelease) | color(firecolor) | bold | center; }),
+    Renderer([&firecolor, &powereiffel]      { return text(powereiffel) | color(firecolor) | bold | center; }),
+    Renderer([&firecolor, &owemoney]      { return text(owemoney) | color(firecolor) | bold | center; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
-    Renderer([&desatfirecolor, &total_mj_usage] { return text(std::format("             Total joules used (per run): {} mJ                       ", (long) total_mj_usage)) | color(desatfirecolor) | center ; }),
-    Renderer([&desatfirecolor, &kgCO2] { return text(std::format("             Total kg CO2 released (per run): {} kg                 ", kgCO2)) | color(desatfirecolor) | center ; }),
+    Renderer([&desatfirecolor, &totalmjline] { return text(totalmjline) | color(desatfirecolor) | center ; }),
+    Renderer([&desatfirecolor, &totalkgco2] { return text(totalkgco2) | color(desatfirecolor) | center ; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; }),
     Renderer([&firecolor]      { return text("                                                                     ") | color(firecolor) | center ; })
   });
