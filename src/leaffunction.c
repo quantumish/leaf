@@ -37,6 +37,11 @@ uint64_t get_total_energy_usage(leaffn_t* fn_node) {
     return fn_node->total_energy_usage;
 }
 
+uint64_t increment_total_energy_usage(leaffn_t* fn_node, uint32_t energy_uj) {
+    fn_node->total_energy_usage += energy_uj;
+    return fn_node->total_energy_usage;
+}
+
 leaffn_t* get_caller(leaffn_t* fn_node) {
     return fn_node->caller;
 }
@@ -47,6 +52,23 @@ uba_t* get_callees(leaffn_t* fn_node) {
 
 char* get_fn_ident(leaffn_t* fn_node) {
     return fn_node->fn_ident;   
+}
+
+leaffn_t* find_callee(leaffn_t* fn_node, char* fn_ident) {
+    uba_t* callees = fn_node->callees;
+    size_t num_callees = uba_len(callees);
+    for (size_t callee_idx = 0; callee_idx < num_callees; callee_idx++) {
+        // TODO
+    }
+}
+
+void add_callee(leaffn_t* fn_node, leaffn_t* new_callee) {
+    uba_add(
+        fn_node->callees,
+        (char*) (new_callee) // cast to char* for generics
+                             // underlying "true" type is still
+                             // leaffn_t*.
+    );
 }
 
 void free_leaffn(leaffn_t* fn_node) {

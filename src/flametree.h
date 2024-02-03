@@ -12,7 +12,7 @@
  * 
  * Everything is heap-allocated! :(
  * 
- * Authors: @bensong04, @quantumish
+ * Authors: @bensong04, @quantumish, @sim15
  * 
 */
 
@@ -25,7 +25,7 @@
 #include "leaffunction.h"
 
 typedef struct flametree_header {
-        
+
 } flametree_t;
 
 flametree_t* flametree_new();
