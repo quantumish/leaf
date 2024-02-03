@@ -19,7 +19,8 @@
 #include "constants.hpp"
 #include "rapl.hpp"
 
-#include <dlfcn.h>
+#include <sstream>
+
 extern "C" {
 #include <Zydis/Zydis.h>
 #include <Zydis/Disassembler.h>
@@ -39,58 +40,65 @@ void unfreeze(pid_t pid) {
     ptrace(PTRACE_DETACH, pid, NULL, NULL);
 }
 
-int disas(int pid, unsigned long addr)
+std::string disas(int pid, unsigned long addr, unsigned long cur_addr)
 {
+    std::stringstream ss;
     ZyanU64 runtime_address = addr;
     ZyanUSize offset = 0;
     ZydisDisassembledInstruction instruction;
-    long ins[4];
+    long ins[8];
     ins[0] = ptrace(PTRACE_PEEKTEXT, pid, addr, NULL);
     ins[1] = ptrace(PTRACE_PEEKTEXT, pid, addr+8, NULL);
     ins[2] = ptrace(PTRACE_PEEKTEXT, pid, addr+16, NULL);
-    ins[3] = ptrace(PTRACE_PEEKTEXT, pid, addr+16, NULL);
+    ins[3] = ptrace(PTRACE_PEEKTEXT, pid, addr+24, NULL);
+    ins[4] = ptrace(PTRACE_PEEKTEXT, pid, addr+32, NULL);
+    ins[5] = ptrace(PTRACE_PEEKTEXT, pid, addr+40, NULL);
+    ins[6] = ptrace(PTRACE_PEEKTEXT, pid, addr+48, NULL);
+    ins[7] = ptrace(PTRACE_PEEKTEXT, pid, addr+56, NULL);
     
     ZyanU8* data = (ZyanU8*)&ins;
-     while (ZYAN_SUCCESS(ZydisDisassembleATT(
-        /* machine_mode:    */ ZYDIS_MACHINE_MODE_LONG_64,
-        /* runtime_address: */ runtime_address,
-        /* buffer:          */ data + offset,
-        /* length:          */ sizeof(data)*4 - offset,
-        /* instruction:     */ &instruction
-    ))) {
-        printf("%016" PRIX64 "  %s\n", runtime_address, instruction.text);
+    while (ZYAN_SUCCESS(ZydisDisassembleATT(
+                                            /* machine_mode:    */ ZYDIS_MACHINE_MODE_LONG_64,
+                                            /* runtime_address: */ runtime_address,
+                                            /* buffer:          */ data + offset,
+                                            /* length:          */ sizeof(data)*16 - offset,
+                                            /* instruction:     */ &instruction
+                                            ))) {
+        ss << runtime_address << "\t" << instruction.text << "\n";             
+        // printf("=> %016" PRIX64 "  %s\n", runtime_address, instruction.text);
+        // } else printf("%016" PRIX64 "  %s\n", runtime_address, instruction.text);
         offset += instruction.info.length;
         runtime_address += instruction.info.length;
     }
+    return ss.str();
 }
 
 
-std::vector<std::string> unwind(pid_t pid) {    
+std::vector<std::tuple<std::string, intptr_t, std::string>> unwind(pid_t pid) {    
     void* ui = _UPT_create(pid);
     unw_cursor_t c;
     unw_addr_space_t as = unw_create_addr_space(&_UPT_accessors, 0);
     unw_init_remote(&c, as, ui);
-    std::vector<std::string> stack {};
+    std::vector<std::tuple<std::string, intptr_t, std::string>> stack {};
     do {
         unw_word_t offset;
         char fname[MAX_SYMLEN] = {0};
         int resp = unw_get_proc_name(&c, fname, MAX_SYMLEN, &offset);
         unw_proc_info_t pip;
         unw_get_proc_info(&c, &pip);
-        printf("%s\n", fname);
-        disas(pid, pip.start_ip); 
-
-        
         unw_word_t ip;
         unw_get_reg(&c, UNW_REG_IP, &ip);
+        std::string dis = disas(pid, pip.start_ip, ip); 
+
+        
         // Dl_info info;
         // dladdr((void*)ip, &info);
         // // printf("%p\n", (void*)ip);        
         // printf("%s: %p\n",fname, (char*)info.dli_fbase);       
 
-        disas(pid, ip); 
+        // disas(pid, ip); 
         // printf("RIP: %llx instruction %lx\n", regs.rip, ins);
-        stack.emplace_back(fname);
+        stack.emplace_back(std::string(fname), ip, dis);
     } while(unw_step(&c) > 0);
     _UPT_resume(as, &c, ui);
     _UPT_destroy(ui);

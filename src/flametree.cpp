@@ -5,6 +5,7 @@
 */
 
 #include "flametree.hpp"
+#include <cstdint>
 #include <string.h>
 #include <stack>
 
@@ -23,7 +24,7 @@ void flametree_free(flametree_t* root) {
     return;
 }
 
-void flametree_update(flametree_t* root, std::vector<std::string> call_stack, uint32_t energy_uj) {
+void flametree_update(flametree_t* root, call_stack_t call_stack, uint32_t energy_uj) {
     // CALL STACK
     size_t num_fns_in_stack = call_stack.size();
 
@@ -33,8 +34,17 @@ void flametree_update(flametree_t* root, std::vector<std::string> call_stack, ui
 
     // start at 1; first in callstack is always root entry point
     for (size_t i = 1; i < num_fns_in_stack; i++) {
-        std::string call_stack_fn_id = call_stack[i]; // get current node
+        std::string call_stack_fn_id = std::get<0>(call_stack[i]); // get current node
         leaffn_t* next_callee = find_callee(curr_leaf, call_stack_fn_id);
+        next_callee->disas = std::get<2>(call_stack[i]);
+
+        intptr_t rip = std::get<1>(call_stack[i]);
+        if (!next_callee->instrs.contains(rip)) { // hopefully true
+            next_callee->instrs.insert({rip, 1});
+        } else {
+            next_callee->instrs[rip] += 1;
+        }
+    
         increment_total_energy_usage(curr_leaf, energy_uj);
         curr_leaf = next_callee;
     }
@@ -53,7 +63,7 @@ void flametree_dump(leaffn_t* root, int depth) {
 }
 
 void _dump_dfs_helper(leaffn_t* curr_node, json::jobject& curr_json_level) {
-    std::unordered_map<std::string, leaffn_t*> node_callees = 
+    std::unordered_map<std::string, leaffn_t*>  node_callees = 
                     get_callees(curr_node);
     std::vector<json::jobject> curr_children;
     for (auto callee = node_callees.begin(); callee != node_callees.end(); ++callee) {
@@ -63,6 +73,12 @@ void _dump_dfs_helper(leaffn_t* curr_node, json::jobject& curr_json_level) {
     }    
     curr_json_level["children"] = curr_children;
     curr_json_level["ident"] = get_fn_ident(curr_node);
+    curr_json_level["disas"] = curr_node->disas;
+    std::unordered_map<intptr_t, unsigned> instrs = curr_node->instrs;
+    for (auto const& [key,val] : instrs) {
+        std::cout << key << " " << val << "\n";
+        curr_json_level[std::to_string(key)] = val;
+    }    
     curr_json_level["energy"] = (unsigned long) get_total_energy_usage(curr_node);
 }
 

@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 #ifdef NVIDIA
             std::cout << gpu_uJ_since_ever() << "\n";
 #endif 
-            std::vector<std::string> stack = unwind(tids[i]);
+            call_stack_t stack = unwind(tids[i]);
             
             flametree_update(fts[i], stack, energy);
             unfreeze(tids[i]);

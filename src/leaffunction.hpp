@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <vector>
 #include <unordered_map>
 #include <stdint.h>
@@ -17,7 +18,9 @@
 typedef struct leaffunction_header {
     uint64_t total_energy_usage;    
     struct leaffunction_header* caller;
-    std::unordered_map<std::string, struct leaffunction_header*> callees; 
+    std::unordered_map<std::string, struct leaffunction_header*> callees;
+    std::unordered_map<intptr_t, unsigned> instrs;
+    std::string disas;
     std::string fn_ident;
 } leaffn_t;
 
