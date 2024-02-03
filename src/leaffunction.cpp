@@ -1,6 +1,6 @@
 /**
  * 
- * Author: @bensong04
+ * @author: bensong04
  * 
 */
 
@@ -15,8 +15,9 @@
 #define UBA_DEFAULT_SIZE 10
 
 leaffn_t* new_leaffn(leaffn_t* caller, std::string fn_ident) {
-    leaffn_t* new_leaf = (leaffn_t*) malloc(sizeof(leaffn_t));
+    leaffn_t* new_leaf = new leaffn_t;
     if (new_leaf == NULL) return NULL; // allocating memory for the header failed
+    new_leaf->callees = std::unordered_map<std::string, leaffn_t*>{};
     new_leaf->total_energy_usage = 0;
     new_leaf->caller = caller;
     new_leaf->fn_ident = fn_ident;
@@ -46,10 +47,10 @@ std::string get_fn_ident(leaffn_t* fn_node) {
 
 leaffn_t* find_callee(leaffn_t* fn_node, std::string fn_ident) {
     std::unordered_map<std::string, leaffn_t*> callees = fn_node->callees;
-    if (callees[fn_ident] == NULL) { // hopefully true
-        callees[fn_ident] = new_leaffn(fn_node, fn_ident);
+    if (!callees.contains(fn_ident)) { // hopefully true
+        add_callee(fn_node, new_leaffn(fn_node, fn_ident));
     }
-    return callees[fn_ident];
+    else return callees[fn_ident];
 }
 
 void add_callee(leaffn_t* fn_node, leaffn_t* new_callee) {    
@@ -57,5 +58,5 @@ void add_callee(leaffn_t* fn_node, leaffn_t* new_callee) {
 }
 
 void free_leaffn(leaffn_t* fn_node) {
-    free(fn_node);
+    delete fn_node;
 }

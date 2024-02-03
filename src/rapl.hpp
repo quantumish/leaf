@@ -2,7 +2,7 @@
  * 
  * Interface for reading energy usage data from RAPL.
  * 
- * Authors: @bensong04, @sim15
+ * @author bensong04, sim15
  * 
 */
 

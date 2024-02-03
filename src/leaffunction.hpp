@@ -3,7 +3,7 @@
  * Structure to hold data about called functions, including total energy usage, 
  * function name, the (single) caller, and any callees.
  * 
- * Authors: @bensong04
+ * @author bensong04
  * 
 */
 
