@@ -16,3 +16,12 @@ target_link_libraries(ftxui-starter
   PRIVATE ftxui::dom
   PRIVATE ftxui::component # Not needed for this example.
 )
+
+include_directories(${PROJECT_SOURCE_DIR}/src)
+project(ftxui-coloring LANGUAGES CXX VERSION 1.0.0)
+add_executable(ftxui-coloring src/json.h src/json.cpp src/test_colors.cpp)
+target_link_libraries(ftxui-coloring
+  PRIVATE ftxui::screen
+  PRIVATE ftxui::dom
+  PRIVATE ftxui::component
+)
