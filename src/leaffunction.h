@@ -21,6 +21,8 @@ typedef struct leaffunction_header {
     char* fn_ident;
 } leaffn_t;
 
+leaffn_t* new_leaffn(leaffn_t caller, char* fn_ident);
+
 uint64_t get_total_energy_usage(leaffn_t* fn_node);
 
 leaffn_t get_caller(leaffn_t* fn_node);
