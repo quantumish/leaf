@@ -1,8 +1,10 @@
 <p align="center"><img style="float: right; width: 120px;" src="https://i.imgur.com/xz7unmY.png"></p>
 
 # firefly
-Energy profiler for large distributed systems. Built for tartanhacks24!
 
+Built for TartanHacks 2024: Amplify! 
+
+Amplify your carbon offset with Firefly, an energy profiler for large distributed systems. Firefly samples multiple executions of an executable while recording energy usage through Intel RAPL. Along with displaying the entire stack trace of the program, it displays and disassembles the most energy-consuming functions so that the user can have some insight on how to optimize them to run more efficiently.
 
 To run the Firefly profiler and generate the associated JSON:
 ```

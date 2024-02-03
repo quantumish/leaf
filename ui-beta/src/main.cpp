@@ -116,7 +116,7 @@ int main() {
 
   json::jobject result = json::jobject::parse(fileContent);
   uint64_t total_mj_usage = (long) result["energy"];
-  double total_j_usage = total_mj_usage / 1000;
+  double total_j_usage = total_mj_usage / A_MILLION;
   double kgCO2 = total_j_usage * JOULE_TO_CO2;
   double dollarTrees = total_j_usage * JOULE_TO_TREE_COST;
   double eiffelDays = total_j_usage * JOULE_TO_EIFFEL_DAYS;
