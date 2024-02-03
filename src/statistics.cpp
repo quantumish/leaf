@@ -6,7 +6,7 @@
 
 #include "statistics.hpp"
 #include "rapl.hpp"
-
+#include <cstdio>
 /**
  * 
  * Source: https://www.johndcook.com/blog/normal_cdf_inverse/
@@ -59,6 +59,7 @@ std::pair<double, double> record_baseline_conf_interval(int iterations, double c
     for (int iteration_idx = 0; iteration_idx < iterations; iteration_idx++) {
         variance += std::pow((mean_mj - baseline_data_in_mj[iteration_idx]), 2);
     }
+    variance /= (iterations - 1);
     double stdev = std::sqrt(variance);
     // return degenerate interval in case confidence is invalid
     if (confidence < 0 || confidence > 1) return std::pair<double, double>(0, 0); 
