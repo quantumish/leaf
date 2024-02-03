@@ -30,7 +30,7 @@ leaffn_t* get_caller(leaffn_t* fn_node);
 
 std::unordered_map<std::string, struct leaffunction_header*> get_callees(leaffn_t* fn_node);
 
-leaffn_t* find_callee(leaffn_t* fn_node, char* fn_ident);
+leaffn_t* find_callee(leaffn_t* fn_node, std::string fn_ident);
 
 void add_callee(leaffn_t* fn_node, leaffn_t* new_callee);
 
