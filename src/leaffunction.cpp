@@ -46,10 +46,10 @@ std::string get_fn_ident(leaffn_t* fn_node) {
 
 leaffn_t* find_callee(leaffn_t* fn_node, std::string fn_ident) {
     std::unordered_map<std::string, leaffn_t*> callees = fn_node->callees;
-    if (callees[fn_ident] == NULL) { // hopefully true
-        callees[fn_ident] = new_leaffn(fn_node, fn_ident);
+    if (!callees.contains(fn_ident)) { // hopefully true
+        add_callee(fn_node, new_leaffn(fn_node, fn_ident));
     }
-    return callees[fn_ident];
+    else return callees[fn_ident];
 }
 
 void add_callee(leaffn_t* fn_node, leaffn_t* new_callee) {    
