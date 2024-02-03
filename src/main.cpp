@@ -42,6 +42,7 @@ std::vector<pid_t> get_tids(pid_t target) {
 }
 
 int main(int argc, char** argv) {
+    uint32_t last_rapl = 0;
     if (argc < 2) {
         printf("usage: ./leaf [pid]\n");
         exit(0);
@@ -53,7 +54,7 @@ int main(int argc, char** argv) {
     // TODO do not make iteration based
     for (int i = 0; i < 1000; i++) {
         for (int i = 0; i < tids.size(); i++) {
-            uint32_t energy = freeze(tids[i]);
+            uint32_t energy = freeze(tids[i], last_rapl);
 #ifdef NVIDIA
             std::cout << gpu_uJ_since_ever() << "\n";
 #endif 

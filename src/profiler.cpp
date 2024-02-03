@@ -21,11 +21,11 @@
 #include <dlfcn.h>
 #include <udis86.h>
 
-uint32_t freeze(pid_t pid) {
+uint32_t freeze(pid_t pid, uint32_t& last_rapl) {
     ptrace(PTRACE_ATTACH, pid);
     kill(pid, SIGSTOP);
     waitpid(pid, NULL, 0);
-    return get_curr_mjoule_usage();
+    return get_curr_mjoule_usage(last_rapl);
 }
 
 void unfreeze(pid_t pid) {
