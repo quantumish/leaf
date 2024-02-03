@@ -7,6 +7,7 @@
 #include "flametree.hpp"
 #include <string.h>
 
+#include <iostream>
 
 flametree_t* flametree_new() {
     flametree_t* res = (flametree_t*)malloc(sizeof(flametree_t));
@@ -38,4 +39,13 @@ void flametree_update(flametree_t* root, std::vector<std::string> call_stack, ui
     return;
 }
 
-void flametree_dump(flametree_t* root, FILE* outstream) {}
+void flametree_dump(leaffn_t* root, int depth) {
+    for (int i = 0; i < depth; i++) {
+        std::cout << "\t";
+    }
+    std::cout << root->fn_ident << "\n";
+    std::cout << root->callees.size() << "\n";
+    for (auto child : root->callees) {
+        flametree_dump(child.second, depth+1);
+    }    
+}

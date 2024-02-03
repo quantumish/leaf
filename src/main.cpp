@@ -35,6 +35,6 @@ int main(int argc, char** argv) {
         usleep(SLEEP_TIME);
     }
     /* FILE* out = fopen("./test.json", "w"); */
-    /* flametree_dump(ft, out); */
+    flametree_dump(ft->root_leaffn, 0);
     /* fclose(out); */
 }
