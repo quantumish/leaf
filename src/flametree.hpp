@@ -25,6 +25,7 @@
 #include <string>
 
 #include "leaffunction.hpp"
+#include "rapidjson/document.h"
 
 typedef struct flametree_header {
     leaffn_t* root_leaffn;

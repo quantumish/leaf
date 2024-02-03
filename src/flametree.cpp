@@ -6,7 +6,9 @@
 
 #include "flametree.hpp"
 #include <string.h>
+#include <queue>
 
+using namespace rapidjson;
 
 flametree_t* flametree_new() {
     flametree_t* res = (flametree_t*)malloc(sizeof(flametree_t));
@@ -38,4 +40,8 @@ void flametree_update(flametree_t* root, std::vector<std::string> call_stack, ui
     return;
 }
 
-void flametree_dump(flametree_t* root, FILE* outstream) {}
+void flametree_dump(flametree_t* root, FILE* outstream) {
+    Document output_json_document;
+    // traverse tree
+    std::queue<> node_queue;
+}
