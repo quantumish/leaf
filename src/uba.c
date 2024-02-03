@@ -20,13 +20,13 @@ char* uba_get(uba_t* uba, size_t i) {
 
 // FIXME realloc troubles
 void uba_resize(uba_t* uba) {    
-    /* uba->capacity *= 2;     */
+    uba->capacity *= 2;
     // TODO handle errors
-    /* uba->data = realloc(uba->data, uba->capacity); */
+    uba->data = realloc(uba->data, uba->capacity);
 }
 
 void uba_add(uba_t* uba, char *s) {
-    if (uba->size == uba->capacity) uba_resize(uba);
+    if (uba->size == uba->capacity) return;
     memcpy(uba->data+(uba->size*uba->elt_size), s, uba->elt_size);
     uba->size++;
 }

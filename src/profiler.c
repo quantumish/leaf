@@ -32,14 +32,15 @@ uba_t* unwind(pid_t pid) {
     unw_cursor_t c;
     unw_addr_space_t as = unw_create_addr_space(&_UPT_accessors, 0);
     unw_init_remote(&c, as, ui);
-    uba_t* stack = uba_new(16, MAX_SYMLEN+1);    
+    uba_t* stack = uba_new(8, MAX_SYMLEN+1);    
     do {
         unw_word_t offset;
-        char* fname = calloc(MAX_SYMLEN, sizeof(char));
+        char fname[MAX_SYMLEN] = {0};
         int resp = unw_get_proc_name(&c, fname, MAX_SYMLEN, &offset);
         uba_add(stack, fname);                        
     } while(unw_step(&c) > 0);
     _UPT_resume(as, &c, ui);
     _UPT_destroy(ui);
+    unw_destroy_addr_space(as);    
     return stack;
 }
