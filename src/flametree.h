@@ -13,12 +13,14 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "uba.h"
+
 typedef struct flametree_header flametree_t;
 
-flametree_t* new_flametree();
+flametree_t* flametree_new();
 
-void free_flametree(flametree_t* root_node);
+void flametree_free(flametree_t* root);
 
-void add_energy_to_flametree(flametree_t* root_node, uba_t call_stack, size_t uba_len, uint32_t energy_in_mj);
+void flametree_update(flametree_t* root, uba_t call_stack, uint32_t energy_uj);
 
-void write_tree_to_stream(flametree_t* root_node, FILE* outstream);
+void flametree_dump(flametree_t* root, FILE* outstream);
