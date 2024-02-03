@@ -6,8 +6,10 @@
 
 #include "flametree.hpp"
 #include <string.h>
+#include <queue>
 
 #include <iostream>
+using namespace rapidjson;
 
 flametree_t* flametree_new() {
     flametree_t* res = (flametree_t*)malloc(sizeof(flametree_t));
