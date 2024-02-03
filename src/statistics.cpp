@@ -36,12 +36,12 @@ double NormalCDFInverse(double p)
     else if (p < 0.5)
     {
         // F^-1(p) = - G^-1(p)
-        return -RationalApproximation( sqrt(-2.0*log(p)) );
+        return -RationalApproximation( std::sqrt(-2.0*std::log(p)) );
     }
     else
     {
         // F^-1(p) = G^-1(1-p)
-        return RationalApproximation( sqrt(-2.0*log(1-p)) );
+        return RationalApproximation( std::sqrt(-2.0*std::log(1-p)) );
     }
 }
 
