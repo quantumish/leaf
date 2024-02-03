@@ -3,8 +3,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <vector>
+#include <string>
+
 /* #include "flametree.h" */
-#include "profiler.h"
+#include "profiler.hpp"
+
+#include <iostream>
 
 #define SLEEP_TIME 1000
 
@@ -18,14 +23,14 @@ int main(int argc, char** argv) {
     // TODO do not make iteration based
     for (int i = 0; i < 10000; i++) {
         uint32_t energy = freeze(target);
-        uba_t* stack = unwind(target);
+        std::vector<std::string> stack = unwind(target);
+        // for (auto s : stack) {
+        // }
         /* for (int i = 0; i < uba_len(stack); i++) { */
         /*     printf("%s\n", uba_get(stack, i)); */
         /* } */
         /* printf("\n"); */
-        uba_free(stack);
-        unfreeze(target);
-        /* flametree_update(ft, stack, energy); */
+        unfreeze(target);        
         usleep(SLEEP_TIME);
     }
     /* FILE* out = fopen("./test.json", "w"); */

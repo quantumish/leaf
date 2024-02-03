@@ -9,19 +9,17 @@
 
 #pragma once
 
-#include "uba.h"
+#include <vector>
 #include <stdint.h>
-
-typedef leaffn_t;
 
 typedef struct leaffunction_header {
     uint64_t total_energy_usage;    
-    leaffn_t caller;
-    uba_t* callees; // pointer abuse: cast leaffn_t* to char* and back
+    struct leaffunction_header* caller;
+    std::vector<struct leaffunction_header*> callees; // pointer abuse: cast leaffn_t* to char* and back
     char* fn_ident;
 } leaffn_t;
 
-leaffn_t* new_leaffn(leaffn_t caller, char* fn_ident);
+leaffn_t* new_leaffn(leaffn_t* caller, char* fn_ident);
 
 uint64_t get_total_energy_usage(leaffn_t* fn_node);
 

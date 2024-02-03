@@ -9,9 +9,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "constants.h"
-#include "uba.h"
-#include "rapl.h"
+#include <vector>
+#include <string>
+
+#include "constants.hpp"
+#include "rapl.hpp"
 
 uint32_t freeze(pid_t pid) {
     ptrace(PTRACE_ATTACH, pid);
@@ -27,17 +29,17 @@ void unfreeze(pid_t pid) {
     ptrace(PTRACE_DETACH, pid, NULL, NULL);
 }
 
-uba_t* unwind(pid_t pid) {    
+std::vector<std::string> unwind(pid_t pid) {    
     void* ui = _UPT_create(pid);
     unw_cursor_t c;
     unw_addr_space_t as = unw_create_addr_space(&_UPT_accessors, 0);
     unw_init_remote(&c, as, ui);
-    uba_t* stack = uba_new(8, MAX_SYMLEN+1);    
+    std::vector<std::string> stack {};
     do {
         unw_word_t offset;
         char fname[MAX_SYMLEN] = {0};
         int resp = unw_get_proc_name(&c, fname, MAX_SYMLEN, &offset);
-        uba_add(stack, fname);                        
+        stack.emplace_back(fname);
     } while(unw_step(&c) > 0);
     _UPT_resume(as, &c, ui);
     _UPT_destroy(ui);

@@ -4,7 +4,7 @@
  * 
 */
 
-#include "flametree.h"
+#include "flametree.hpp"
 #include <string.h>
 
 flametree_t* flametree_new() {
@@ -12,14 +12,14 @@ flametree_t* flametree_new() {
     return NULL; // TODO
 }
 
-void flametree_update(flametree_t* root, uba_t* call_stack, uint32_t energy_uj) {
-    size_t num_fns_in_stack = uba_len(call_stack);
+void flametree_update(flametree_t* root, std::vector<std::string> call_stack, uint32_t energy_uj) {
+    size_t num_fns_in_stack = call_stack.size();
     flametree_t* curr_leaf = root;
     increment_total_energy_usage(curr_leaf, energy_uj);
 
     // start at 1; first in callstack is always root entry point
     for (size_t i = 1; i < num_fns_in_stack; i++) {
-        char* call_stack_fn_id = uba_get(call_stack, i); // get current node
+        char* call_stack_fn_id = call_stack[i]; // get current node
         leaffn_t* next_callee = find_callee(curr_leaf, call_stack_fn_id);
         if (next_callee == NULL) {
             // create new node for callee
