@@ -3,3 +3,12 @@ leaf
 test_read_rapl
 a.out
 *.o
+ui-beta/build
+build
+ui-beta/_deps
+ui-beta/lib
+ui-beta/bin
+ui-beta/CMakeFiles
+ui-beta/CMakeCache.txt
+ui-beta/cmake_install.cmake
+

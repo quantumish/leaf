@@ -45,7 +45,7 @@ double NormalCDFInverse(double p)
     }
 }
 
-std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence, uint32_t& last_rapl) {
+std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence, uint32_t* last_rapl) {
     std::vector<uint32_t> baseline_data_in_mj;
     uint64_t mean_mj = 0;
     for (int iteration = 0; iteration < iterations; iteration++) {
