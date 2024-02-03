@@ -64,7 +64,7 @@ std::string disas(int pid, unsigned long addr, unsigned long cur_addr)
                                             /* length:          */ sizeof(data)*16 - offset,
                                             /* instruction:     */ &instruction
                                             ))) {
-        ss << runtime_address << "\t" << instruction.text << "\n";             
+        ss << runtime_address << "        " << instruction.text << "\n";             
         // printf("=> %016" PRIX64 "  %s\n", runtime_address, instruction.text);
         // } else printf("%016" PRIX64 "  %s\n", runtime_address, instruction.text);
         offset += instruction.info.length;

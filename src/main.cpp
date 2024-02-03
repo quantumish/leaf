@@ -32,7 +32,7 @@ std::vector<pid_t> get_tids(pid_t target) {
     }
     while ((ep = readdir(dp))) {
         pid_t tid = strtoll(ep->d_name, NULL, 10);
-        if (tid == 0 || tid == target) continue;        
+        if (tid == 0  || tid == target) continue;        
         tids.push_back(tid);
         printf("found %d\n", tids.back());
     }

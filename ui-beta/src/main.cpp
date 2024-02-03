@@ -19,6 +19,9 @@ using namespace ftxui;
 Component Text(const std::string& t) {
   return Renderer([t] { return text(t); });
 }
+Component Paragraph(const std::string& t) {
+  return Renderer([t] { return paragraph(t); });
+}
 
 Component Separator() {
   return Renderer([] { return separator() | borderEmpty; });
@@ -83,8 +86,7 @@ Component make_collapse(json::jobject energy_profile) {
                   Inner(child_collapsibles));
 
   if (num_children == 0) {
-    return Collapsible(func_id,
-                  Empty());
+    return Text(func_id);
   }
   
   return main_collapsible;
@@ -116,7 +118,8 @@ int main() {
   auto eval_trace_below = Container::Vertical({});
 
   int func_selected = 0;
-  auto info_container = Text("Main text!");
+  
+  
 
   Component title_text = Text("Firefly™ - Environmental Profiler");
   auto thread_1_component = make_collapse(result);
@@ -139,16 +142,64 @@ int main() {
   
   {
     eval_trace_below->Add(tab_toggle);
-    bottom_panel->Add(eval_trace | flex | size(WIDTH, EQUAL, 100));
+    bottom_panel->Add(eval_trace | flex | size(WIDTH, EQUAL, 70));
     eval_trace->Add(Text("Evaluation Trace") | center);
     eval_trace->Add(tab_container | frame | vscroll_indicator | flex);
     eval_trace->Add(eval_trace_below);
   }
 
+
+  auto info_container = Container::Vertical({});
+  auto info_container_wrapper = Container::Horizontal({});
+  auto info_container1 = Container::Vertical({});
+  auto info_container2 = Container::Vertical({});
+
+  std::vector<json::jobject> children = (std::vector<json::jobject>)result["worst"];
+  
   {
     bottom_panel->Add(Separator());
-    bottom_panel->Add(info_container | center | flex);
+    info_container->Add(Text("Hot Spots") | center);
+    size_t counter = 0;
+    for (size_t i = 0; i < children.size() / 2; i++) {
+      auto row = Container::Horizontal({});
+      auto cell = Container::Vertical({});
+      auto cell1 = Container::Vertical({});
+
+      cell->Add(Text(children[i]["ident"]) | bold | underlined);
+        
+      
+      auto ss = std::stringstream{children[i]["disas"]};
+
+      for (std::string line; std::getline(ss, line, '\n');)
+        cell->Add(Paragraph(line) | frame);
+      
+      row->Add(cell  | frame | border | flex | size(WIDTH, EQUAL, 80));
+      info_container1->Add(row);
+      counter++;
+    }
+
+    for (size_t i = counter+1; i < children.size(); i++) {
+      auto row = Container::Horizontal({});
+      auto cell = Container::Vertical({});
+      cell->Add(Text(children[i]["ident"]) | bold | underlined);
+      
+      auto ss = std::stringstream{children[i]["disas"]};
+
+      for (std::string line; std::getline(ss, line, '\n');)
+        cell->Add(Paragraph(line) | frame);
+      
+      row->Add(cell  | frame | border | flex | size(WIDTH, EQUAL, 80));
+      info_container2->Add(row);
+    }
+    
+  info_container_wrapper->Add(info_container1 | flex | frame | vscroll_indicator);
+  info_container_wrapper->Add(info_container2 | flex | frame | vscroll_indicator);
+  info_container->Add(info_container_wrapper);
+  bottom_panel->Add(info_container);
+  
+
   }
+
 
   auto color1 = Color::RGB(250, 250, 110);
   auto color2 = Color::RGB(196, 236, 116);
