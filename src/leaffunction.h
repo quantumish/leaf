@@ -36,3 +36,5 @@ leaffn_t* find_callee(leaffn_t* fn_node, char* fn_ident);
 void add_callee(leaffn_t* fn_node, leaffn_t* new_callee);
 
 char* get_fn_ident(leaffn_t* fn_node);
+
+void free_leaffn(leaffn_t* fn_node);
