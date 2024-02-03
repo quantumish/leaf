@@ -24,6 +24,10 @@ std::vector<pid_t> get_tids(pid_t target) {
     struct dirent *ep;
     std::vector<pid_t> tids;
     DIR* dp = opendir(path);
+    if (dp == NULL) {
+        tids.push_back(target);
+        return tids;
+    }
     while ((ep = readdir(dp))) {
         tids.push_back(strtoll(ep->d_name, NULL, 10));
     }

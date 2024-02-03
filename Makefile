@@ -1,3 +1,5 @@
+.PHONY: test_baseline_stats profile test_read_rapl
+
 test_read_rapl:
 	g++ src/rapl.cpp tests/test_read_rapl.c -I./src -o test_read_rapl
 

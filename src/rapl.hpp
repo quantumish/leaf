@@ -14,7 +14,7 @@
 #include <windows.h>
 #define SLEEP(s) sleep(s)
 #else
-#include <unistd.h>
+#include <time.h>
 #define SLEEP(s) nanosleep((const struct timespec[]){{0, s * 1000000}}, NULL)
 #endif
 
