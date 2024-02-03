@@ -5,6 +5,8 @@
 */
 
 #include "flametree.hpp"
+#include "leaffunction.hpp"
+#include <algorithm>
 #include <cstdint>
 #include <string.h>
 #include <stack>
@@ -62,6 +64,24 @@ void flametree_dump(leaffn_t* root, int depth) {
     }     
 }
 
+void get_leaves(leaffn_t* root, std::vector<leaffn_t*>& leaves, int depth) {
+    std::unordered_map<std::string, leaffn_t*>  node_callees = get_callees(root);
+    leaves.push_back(root);
+    for (auto callee : node_callees) {
+        get_leaves(callee.second, leaves, depth+1);        
+    } 
+}
+
+std::vector<leaffn_t*> worst(leaffn_t* root) {
+    std::vector<leaffn_t*> leaves;
+    get_leaves(root, leaves, 0);
+    std::sort(leaves.begin(), leaves.end(), [](leaffn_t* a, leaffn_t*b) {
+        return a->total_energy_usage > b->total_energy_usage;
+    });
+    std::vector<leaffn_t*> bad(leaves.begin()+3, leaves.begin()+8);
+    return bad;
+}
+
 void _dump_dfs_helper(leaffn_t* curr_node, json::jobject& curr_json_level) {
     std::unordered_map<std::string, leaffn_t*>  node_callees = 
                     get_callees(curr_node);
@@ -77,8 +97,7 @@ void _dump_dfs_helper(leaffn_t* curr_node, json::jobject& curr_json_level) {
     json::jobject jinstrs;
     std::unordered_map<intptr_t, unsigned> instrs = curr_node->instrs;
     for (auto const& [key,val] : instrs) {
-        std::cout << key << " " << val << "\n";
-        instrs[std::to_string(key)] = val;
+        jinstrs[std::to_string(key)] = val;
     }
     curr_json_level["instrs"] = jinstrs;
     curr_json_level["energy"] = (unsigned long) get_total_energy_usage(curr_node);
@@ -87,5 +106,20 @@ void _dump_dfs_helper(leaffn_t* curr_node, json::jobject& curr_json_level) {
 void flametree_dump_json(flametree_t* root, std::ofstream& outstream) {
     json::jobject master_json_object;
     _dump_dfs_helper(root->root_leaffn, master_json_object);
+    std::vector<json::jobject> worsts;
+    for (auto w : worst(root->root_leaffn)) {
+        json::jobject f;
+        f["ident"] = get_fn_ident(w);
+        f["disas"] = w->disas;
+        json::jobject jinstrs;
+        std::unordered_map<intptr_t, unsigned> instrs = w->instrs;
+        for (auto const& [key,val] : instrs) {
+            jinstrs[std::to_string(key)] = val;
+        }
+        f["instrs"] = jinstrs;
+        f["energy"] = (unsigned long) get_total_energy_usage(w);
+        worsts.push_back(f);
+    }
+    master_json_object["worst"] = worsts;
     outstream << (std::string) master_json_object << '\n';
 }

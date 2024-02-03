@@ -26,7 +26,7 @@ extern "C" {
 #include <Zydis/Disassembler.h>
 }
 
-uint32_t freeze(pid_t pid, uint32_t* last_rapl) {
+uint32_t freeze(pid_t pid, uint32_t& last_rapl) {
     ptrace(PTRACE_ATTACH, pid);
     kill(pid, SIGSTOP);
     waitpid(pid, NULL, 0);
