@@ -24,8 +24,11 @@
 #include <vector>
 #include <string>
 
+#include <iostream>
+#include <fstream>
+
 #include "leaffunction.hpp"
-#include "rapidjson/document.h"
+#include "json.h"
 
 typedef struct flametree_header {
     leaffn_t* root_leaffn;
@@ -38,3 +41,5 @@ void flametree_free(flametree_t* root);
 void flametree_update(flametree_t* root, std::vector<std::string> call_stack, uint32_t energy_uj);
 
 void flametree_dump(leaffn_t* root, int depth);
+
+void flametree_dump_json(leaffn_t* root, std::ofstream outstream);

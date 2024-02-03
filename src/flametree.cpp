@@ -6,17 +6,16 @@
 
 #include "flametree.hpp"
 #include <string.h>
-#include <queue>
+#include <stack>
 
 #include <iostream>
-using namespace rapidjson;
+#include <fstream>
 
 flametree_t* flametree_new() {
     flametree_t* res = (flametree_t*)malloc(sizeof(flametree_t));
     res->root_leaffn = new_leaffn(NULL, std::string("_start"));
     return res;
 }
-
 
 void flametree_free(flametree_t* root) {
     free_leaffn(root->root_leaffn);
@@ -51,4 +50,24 @@ void flametree_dump(leaffn_t* root, int depth) {
     for (auto child : root->callees) {
         flametree_dump(child.second, depth+1);
     }     
+}
+
+void _dump_dfs_helper(leaffn_t* curr_node, json::jobject curr_json_level) {
+    std::unordered_map<std::string, leaffn_t*> node_callees = 
+                    get_callees(curr_node);
+    std::vector<json::jobject> curr_children;
+    for (auto callee = node_callees.begin(); callee != node_callees.end(); ++callee) {
+        json::jobject new_callee_json_level;
+        curr_children.push_back(new_callee_json_level);
+        _dump_dfs_helper(callee->second, new_callee_json_level);
+    }
+    curr_json_level["children"] = curr_children;
+    curr_json_level["ident"] = get_fn_ident(curr_node);
+    curr_json_level["energy"] = (unsigned long) get_total_energy_usage(curr_node);
+}
+
+void flametree_dump_json(flametree_t* root, std::ofstream outstream) {
+    json::jobject master_json_object;
+    _dump_dfs_helper(root->root_leaffn, master_json_object);
+    outstream << (std::string) master_json_object;
 }
