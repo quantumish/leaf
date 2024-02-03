@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#define SLEEP_TIME 1000
+#define SLEEP_TIME 10
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -35,6 +35,6 @@ int main(int argc, char** argv) {
         usleep(SLEEP_TIME);
     }
     /* FILE* out = fopen("./test.json", "w"); */
-    /* flametree_dump(ft, out); */
+    // flametree_dump(ft->root_leaffn, 0);
     /* fclose(out); */
 }

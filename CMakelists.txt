@@ -1,14 +1,19 @@
 cmake_minimum_required(VERSION 3.14)
-project(leaf)
+project(leaf LANGUAGES CXX)
 
-# set_target_properties(IEngine PROPERTIES LINKER_LANGUAGE CXX)
+set(PROJECT_NAME
+    leaf
+)
+
+# set_target_properties(src PROPERTIES LINKER_LANGUAGE CXX)
 
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(TEST_DIR
-    tests
+    tests_cpp
 )
 
 set(SOURCE_DIR
@@ -47,6 +52,7 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/${SOURCE_DIR}/leaffunction.hpp
     ${CMAKE_SOURCE_DIR}/${SOURCE_DIR}/profiler.hpp
     ${CMAKE_SOURCE_DIR}/${SOURCE_DIR}/rapl.hpp
+    ${CMAKE_SOURCE_DIR}/${SOURCE_DIR}/main.cpp
 )
 
 add_executable(${PROJECT_NAME} "${SOURCE_FILES}")
