@@ -32,3 +32,8 @@ void uba_add(uba_t uba, char *s) {
 size_t uba_len(uba_t uba) {
     return uba->size;
 }
+
+void uba_free(uba_t uba) {
+    free(uba->data);
+    free(uba);
+}

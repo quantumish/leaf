@@ -7,4 +7,4 @@
 
 uint32_t freeze(pid_t pid);
 void unfreeze(pid_t pid);
-uba_t unwind(pid_t target);
+uba_t* unwind(pid_t target);

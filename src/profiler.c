@@ -27,12 +27,12 @@ void unfreeze(pid_t pid) {
     ptrace(PTRACE_DETACH, pid, NULL, NULL);
 }
 
-uba_t unwind(pid_t pid) {    
+uba_t* unwind(pid_t pid) {    
     void* ui = _UPT_create(pid);
     unw_cursor_t c;
     unw_addr_space_t as = unw_create_addr_space(&_UPT_accessors, 0);
     unw_init_remote(&c, as, ui);
-    uba_t stack = uba_new(8, MAX_SYMLEN+1);    
+    uba_t* stack = uba_new(8, MAX_SYMLEN+1);    
     do {
         unw_word_t offset;
         char* fname = calloc(MAX_SYMLEN, sizeof(char));
