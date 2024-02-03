@@ -35,6 +35,7 @@ void flametree_update(flametree_t* root, std::vector<std::string> call_stack, ui
         std::string call_stack_fn_id = call_stack[i]; // get current node
         leaffn_t* next_callee = find_callee(curr_leaf, call_stack_fn_id);
         increment_total_energy_usage(curr_leaf, energy_uj);
+        curr_leaf = next_callee;
     }
     return;
 }
@@ -43,9 +44,9 @@ void flametree_dump(leaffn_t* root, int depth) {
     for (int i = 0; i < depth; i++) {
         std::cout << "\t";
     }
-    std::cout << root->fn_ident << "\n";
-    std::cout << root->callees.size() << "\n";
+    std::cout << root->total_energy_usage <<  " " << root->fn_ident << "\n";
+    // std::cout << root->callees.size() << "\n";
     for (auto child : root->callees) {
         flametree_dump(child.second, depth+1);
-    }    
+    }     
 }

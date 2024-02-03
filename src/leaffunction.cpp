@@ -17,7 +17,7 @@
 leaffn_t* new_leaffn(leaffn_t* caller, std::string fn_ident) {
     leaffn_t* new_leaf = new leaffn_t;
     if (new_leaf == NULL) return NULL; // allocating memory for the header failed
-    new_leaf->callees = std::unordered_map<std::string, leaffn_t*>{};
+    // new_leaf->callees = std::unordered_map<std::string, leaffn_t*>{};
     new_leaf->total_energy_usage = 0;
     new_leaf->caller = caller;
     new_leaf->fn_ident = fn_ident;
@@ -46,11 +46,10 @@ std::string get_fn_ident(leaffn_t* fn_node) {
 }
 
 leaffn_t* find_callee(leaffn_t* fn_node, std::string fn_ident) {
-    std::unordered_map<std::string, leaffn_t*> callees = fn_node->callees;
-    if (!callees.contains(fn_ident)) { // hopefully true
+    if (!fn_node->callees.contains(fn_ident)) { // hopefully true
         add_callee(fn_node, new_leaffn(fn_node, fn_ident));
     }
-    else return callees[fn_ident];
+    return fn_node->callees[fn_ident];
 }
 
 void add_callee(leaffn_t* fn_node, leaffn_t* new_callee) {    
