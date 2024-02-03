@@ -11,4 +11,6 @@
 #include <numeric>
 #include <cmath>
 
+double NormalCDFInverse(double p);
+
 std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence);
