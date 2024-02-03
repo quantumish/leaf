@@ -74,11 +74,13 @@ void _dump_dfs_helper(leaffn_t* curr_node, json::jobject& curr_json_level) {
     curr_json_level["children"] = curr_children;
     curr_json_level["ident"] = get_fn_ident(curr_node);
     curr_json_level["disas"] = curr_node->disas;
+    json::jobject jinstrs;
     std::unordered_map<intptr_t, unsigned> instrs = curr_node->instrs;
     for (auto const& [key,val] : instrs) {
         std::cout << key << " " << val << "\n";
-        curr_json_level[std::to_string(key)] = val;
-    }    
+        instrs[std::to_string(key)] = val;
+    }
+    curr_json_level["instrs"] = jinstrs;
     curr_json_level["energy"] = (unsigned long) get_total_energy_usage(curr_node);
 }
 
