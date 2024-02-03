@@ -10,6 +10,14 @@
 
 #include <stdint.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#define SLEEP(s) sleep(s)
+#else
+#include <unistd.h>
+#define SLEEP(s) nanosleep((const struct timespec[]){{0, s * 1000000}}, NULL)
+#endif
+
 #ifdef __linux__
 #define ENERGY_UJ_PATH "/sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj"
 #else
