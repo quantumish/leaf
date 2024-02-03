@@ -22,9 +22,10 @@ int main(int argc, char** argv) {
         for (int i = 0; i < uba_len(stack); i++) {
             printf("%s\n", uba_get(stack, i));
         }
+        printf("\n");
         uba_free(stack);
         unfreeze(target);
-        flametree_update(ft, stack, energy);
+        /* flametree_update(ft, stack, energy); */
         usleep(SLEEP_TIME);
     }
     FILE* out = fopen("./test.json", "w");

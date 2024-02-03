@@ -32,7 +32,7 @@ uba_t* unwind(pid_t pid) {
     unw_cursor_t c;
     unw_addr_space_t as = unw_create_addr_space(&_UPT_accessors, 0);
     unw_init_remote(&c, as, ui);
-    uba_t* stack = uba_new(8, MAX_SYMLEN+1);    
+    uba_t* stack = uba_new(16, MAX_SYMLEN+1);    
     do {
         unw_word_t offset;
         char* fname = calloc(MAX_SYMLEN, sizeof(char));
