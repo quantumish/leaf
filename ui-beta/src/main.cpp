@@ -19,7 +19,7 @@ using namespace ftxui;
 
 
 Component Text(const std::string& t) {
-  return Renderer([t] { return text(t) | borderEmpty; });
+  return Renderer([t] { return text(t); });
 }
 
 Component Separator() {
@@ -41,6 +41,34 @@ Component Empty() {
   return std::make_shared<ComponentBase>();
 }
 
+Component ModifiedCollapsible(ConstStringRef label, Component child, Ref<bool> show = false) {
+  class Impl : public ComponentBase {
+   public:
+    Impl(ConstStringRef label, Component child, Ref<bool> show) : show_(show) {
+      CheckboxOption opt;
+      opt.transform = [](EntryState s) {            // NOLINT
+        auto prefix = text(s.state ? "- " : "+ ");  // NOLINT
+        auto t = text(s.label);
+        if (s.active) {
+          t |= bold;
+        }
+        if (s.focused) {
+          t |= inverted;
+        }
+        return hbox({prefix, t});
+      };
+
+      Add(Container::Vertical({
+          Checkbox(label, show_.operator->(), opt),
+          Maybe(std::move(child), show_.operator->()),
+      }));
+    }
+    Ref<bool> show_;
+  };
+
+  return Make<Impl>(std::move(label), std::move(child), show);
+}
+
 Component make_collapse(json::jobject energy_profile) {
 
   std::vector<Component> child_collapsibles;
@@ -51,24 +79,25 @@ Component make_collapse(json::jobject energy_profile) {
     child_collapsibles.push_back(make_collapse(children[i]));
   }
 
-  std::string func_id = (std::string) energy_profile["ident"] + " - " + (std::string) energy_profile["energy"] + " mJ";
+  std::string func_id = (std::string) energy_profile["ident"] + " (" + (std::string) energy_profile["energy"] + " mJ)";
 
+  Component main_collapsible = ModifiedCollapsible(func_id,
+                  Inner(child_collapsibles));
 
   if (num_children == 0) {
     return Collapsible(func_id,
                   Empty());
   }
   
-  return Collapsible(func_id,
-                  Inner(child_collapsibles));
+  return main_collapsible;
 }
 
 int main() {
-  std::ifstream file("test.json");
+  std::ifstream file("../src/test.json");
 
   // Check if the file is opened successfully
   if (!file.is_open()) {
-      std::cerr << "Error opening file!" << std::endl;
+      std::cerr << "Error opening JSON file!" << std::endl;
       return 1;
   }
 
@@ -85,20 +114,51 @@ int main() {
   auto screen = ScreenInteractive::Fullscreen();
 
   auto bottom_panel = Container::Horizontal({});
+  auto eval_trace = Container::Vertical({});
+  auto eval_trace_below = Container::Vertical({});
 
-  auto component = make_collapse(result);
- 
+  int func_selected = 0;
+  auto info_container = Text("Main text!");
+
+  Component title_text = Text("Firefly™ - Environmental Profiler");
+  auto thread_1_component = make_collapse(result);
+  auto thread_2_component = make_collapse(result);
+  
+  std::vector<std::string> tab_values{
+      "thread_1",
+      "thread_2",
+  };
+
+  int tab_selected = 0;
+  auto tab_toggle = Toggle(&tab_values, &tab_selected);
+
+  auto tab_container = Container::Tab(
+      {
+          thread_1_component,
+          thread_2_component
+      },
+      &tab_selected);
+  
   {
-    bottom_panel->Add(component | flex);
+    eval_trace_below->Add(tab_toggle);
+    bottom_panel->Add(eval_trace | flex | size(WIDTH, EQUAL, 100));
+    eval_trace->Add(Text("Evaluation Trace") | center);
+    eval_trace->Add(tab_container | frame | vscroll_indicator | flex);
+    eval_trace->Add(eval_trace_below);
   }
 
   {
     bottom_panel->Add(Separator());
-    bottom_panel->Add(Text("Cool info") | center | flex);
+    bottom_panel->Add(info_container | center | flex);
   }
 
   auto left = Renderer([] { return text("Left") | center; });
-  auto top = Renderer([] { return text("Save energy, save the planet! -Ben Song") | center; });
+  auto top = Container::Vertical({});
+  
+
+  {
+    top->Add(title_text | center);
+  }
  
   int left_size = 50;
   int right_size = 50;
