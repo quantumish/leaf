@@ -21,5 +21,5 @@ cd ui-beta
 mkdir build
 cmake ..
 make
-./ftxui-starter
+./ftxui-starter profile.json
 ```
