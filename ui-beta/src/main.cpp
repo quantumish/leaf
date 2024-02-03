@@ -16,8 +16,6 @@
 
 using namespace ftxui;
 
-
-
 Component Text(const std::string& t) {
   return Renderer([t] { return text(t); });
 }
@@ -152,21 +150,68 @@ int main() {
     bottom_panel->Add(info_container | center | flex);
   }
 
-  auto left = Renderer([] { return text("Left") | center; });
-  auto top = Container::Vertical({});
+  auto color1 = Color::RGB(250, 250, 110);
+  auto color2 = Color::RGB(196, 236, 116);
+  auto color3 = Color::RGB(146, 220, 126);
+  auto color4 = Color::RGB(100, 201, 135);
+  auto color5 = Color::RGB(57, 180, 142);
+  auto color6 = Color::RGB(8, 159, 143);
+  auto color7 = Color::RGB(0, 137, 138);
+  auto color8 = Color::RGB(8, 115, 127);
+  auto color9 = Color::RGB(33, 93, 110);
   
+  auto linet = Renderer([&color9] { return text("                              ") | color(color9) ; }); 
+  auto line1 = Renderer([&color1] { return text("                  ====        ") | color(color1) ; });  
+  auto line2 = Renderer([&color2] { return text("          -:::::%=%%%==       ") | color(color2) ; });  
+  auto line3 = Renderer([&color3] { return text("     %:::::-%++++++*==#%             _____.__                _____.__         ") | color(color3) ; });  
+  auto line4 = Renderer([&color4] { return text("     %:::%******%++%%=:            _/ ____\\__|______   _____/ ____\\  | ___.__.") | color(color4) ; });  
+  auto line5 = Renderer([&color5] { return text("       %*********%*+:::            \\   __\\|  \\_  __ \\_/ __ \\   __\\|  |<   |  |") | color(color5) ; });  
+  auto line6 = Renderer([&color6] { return text("       %*********%:::::             |  |  |  ||  | \\/\\  ___/|  |  |  |_\\___  |") | color(color6) ; });  
+  auto line7 = Renderer([&color7] { return text("      %********%::::::              |__|  |__||__|    \\___  >__|  |____/ ____|") | color(color7) ; });  
+  auto line8 = Renderer([&color8] { return text("      *%%%%%%%*  %%%                                      \\/           \\/     ") | color(color8) ; }); 
+  auto line9 = Renderer([&color9] { return text("       %%%*%                  ") | color(color9) ; });
+  auto lineb = Renderer([&color9] { return text("                              ") | color(color9) ; });  
+  
+  auto firecolor = Color::RGB(255, 77, 13);
+  auto desatfirecolor = Color::RGB(173, 62, 23);
 
-  {
-    top->Add(title_text | center);
-  }
- 
+  auto logo = Container::Vertical({
+      linet,
+      line1,
+      line2,
+      line3,
+      line4,
+      line5,
+      line6,
+      line7,
+      line8,
+      line9,
+      lineb
+  });
+  
+  auto bignumbers = Container::Vertical({
+    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
+    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
+    Renderer([&desatfirecolor] { return text("                  If your program run on 1 000 000 computers,                 ") | color(desatfirecolor) | center; }),
+    Renderer([&firecolor]      { return text("                  it would release 123456 kg of CO2.                          ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor]      { return text("                  It could power the Eiffel tower for 100 days.               ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor]      { return text("                  You would owe $69420 in carbon taxes.                       ") | color(firecolor) | bold | center; }),
+    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
+    Renderer([&desatfirecolor] { return text("                  Total joules used (per run): 10 J                           ") | color(desatfirecolor) | center ; }),
+    Renderer([&desatfirecolor] { return text("                  Total kg CO2 released (per run): 0.1 kg                     ") | color(desatfirecolor) | center ; }),
+    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; }),
+    Renderer([&firecolor]      { return text("                                                                              ") | color(firecolor) | center ; })
+  });
+  
+  auto top = Container::Horizontal({logo, bignumbers});
+
   int left_size = 50;
   int right_size = 50;
-  int top_size = 10;
-
+  int top_size = 11;
+  
   auto container = bottom_panel;
   container = ResizableSplitTop(top, container, &top_size);
- 
+  
   auto renderer =
       Renderer(container, [&] { return container->Render() | border; });
  
