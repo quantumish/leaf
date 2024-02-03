@@ -27,7 +27,7 @@
 #include "leaffunction.hpp"
 
 typedef struct flametree_header {
-
+    leaffn_t* root_leaffn;
 } flametree_t;
 
 flametree_t* flametree_new();
