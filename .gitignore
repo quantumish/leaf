@@ -3,6 +3,7 @@ leaf
 test_read_rapl
 a.out
 *.o
+.vscode
 ui-beta/build
 build
 ui-beta/_deps

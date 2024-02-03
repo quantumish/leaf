@@ -17,7 +17,7 @@
 #include <dirent.h>
 #include <algorithm>
 
-#define SLEEP_TIME 10
+#define SLEEP_TIME 100
 
 std::vector<pid_t> get_tids(pid_t target) {
     char path[32] = {0};
@@ -52,13 +52,13 @@ int main(int argc, char** argv) {
     std::vector<flametree_t*> fts;
     for (pid_t t : tids) fts.push_back(flametree_new());  
     // TODO do not make iteration based
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 10000; i++) {
         for (int i = 0; i < tids.size(); i++) {
-            uint32_t energy = freeze(tids[i], &last_rapl);
+            uint32_t energy = freeze(tids[i], last_rapl);
 #ifdef NVIDIA
             std::cout << gpu_uJ_since_ever() << "\n";
 #endif 
-            std::vector<std::string> stack = unwind(tids[i]);
+            call_stack_t stack = unwind(tids[i]);
             
             flametree_update(fts[i], stack, energy);
             unfreeze(tids[i]);

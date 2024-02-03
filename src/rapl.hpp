@@ -24,7 +24,7 @@
 #define ENERGY_UJ_PATH "./dummy/dummy_rapl.txt"
 #endif
 
-uint32_t get_curr_mjoule_usage(uint32_t* last_rapl);
+uint32_t get_curr_mjoule_usage(uint32_t& last_rapl);
 
 #ifdef NVIDIA
 uint64_t gpu_uJ_since_ever();
