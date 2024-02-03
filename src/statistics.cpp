@@ -47,7 +47,7 @@ double NormalCDFInverse(double p)
 
 std::pair<double, double> record_baseline_conf_interval(int iterations, double confidence) {
     std::vector<uint32_t> baseline_data_in_mj;
-    uint64_t mean_mj;
+    uint64_t mean_mj = 0;
     for (int iteration = 0; iteration < iterations; iteration++) {
         uint32_t mj = get_curr_mjoule_usage();
         baseline_data_in_mj.push_back(mj);
@@ -55,7 +55,8 @@ std::pair<double, double> record_baseline_conf_interval(int iterations, double c
         SLEEP(1); // sleep for one ms to allow RAPL to update
     }
     mean_mj /= iterations;
-    double variance;
+    printf("%ld\n", (long) mean_mj);
+    double variance = 0;
     for (int iteration_idx = 0; iteration_idx < iterations; iteration_idx++) {
         variance += std::pow((mean_mj - baseline_data_in_mj[iteration_idx]), 2);
     }
