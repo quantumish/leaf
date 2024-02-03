@@ -38,7 +38,8 @@ flametree_t* flametree_new();
 
 void flametree_free(flametree_t* root);
 
-void flametree_update(flametree_t* root, std::vector<std::string> call_stack, uint32_t energy_uj);
+typedef std::vector<std::tuple<std::string, intptr_t, std::string>> call_stack_t;
+void flametree_update(flametree_t* root, call_stack_t call_stack, uint32_t energy_uj);
 
 void flametree_dump(leaffn_t* root, int depth);
 
